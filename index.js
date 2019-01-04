@@ -1,36 +1,5 @@
-// {
-//   type: 'ADD_TODO',
-//   todo: {
-//     id: 0,
-//     name: 'Learn Redux',
-//     complete: false,
-//   }
-// }
 
-// {
-//   type: 'REMOVE_TODO',
-//   id: 0,
-// }
-
-// {
-//   type: 'TOGGLE_TODO',
-//   id: 0,
-// }
-
-// {
-//   type: 'ADD_GOAL',
-//   goal: {
-//     id: 0,
-//     name: 'Run a Marathon'
-//   }
-// }
-
-// {
-//   type: 'REMOVE_GOAL',
-//   id: 0,
-// }
-
-//Reducer
+//Reducers
 function todos(state = [], action) {
   if (action.type === 'ADD_TODO') {
     return state.concat([action.todo])
@@ -42,6 +11,24 @@ function todos(state = [], action) {
     } : todo)
   }
   return state
+}
+
+function goals(state = [], action) {
+  switch (action.type) {
+    case 'ADD_GOAL':
+      return state.concat([action.goal])
+    case 'REMOVE_GOAL':
+      return state.filter((goal) => goal.id !== action.id)
+    default:
+      return state
+  }
+}
+
+function app(state = {}, action){
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action),
+  }
 }
 
 function createStore(reducer) {
@@ -78,33 +65,35 @@ function createStore(reducer) {
   }
 }
 
-const store = createStore(todos)
+const store = createStore(app)
 const unsubscribe = store.subscribe(() => console.log("The ne state is", store.getState()))
+
+//unsubscribe()
+
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
     id: 0,
-    name: 'Learn Redux',
+    name: 'Walk the dog',
     complete: false,
   }
 })
+
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
     id: 1,
-    name: 'Learn pure functions',
-    complete: true,
+    name: 'Wash the car',
+    complete: false,
   }
 })
-
-// unsubscribe()
 
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
-    id: 3,
-    name: 'Learn vue.js',
-    complete: false,
+    id: 2,
+    name: 'Go to the gym',
+    complete: true,
   }
 })
 
@@ -113,4 +102,28 @@ store.dispatch({
   id: 1
 })
 
-store.dispatch({type:'TOGGLE_TODO', id:0})
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 0
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 0,
+    name: 'Learn Redux'
+  }
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 1,
+    name: 'Lose 20 pounds'
+  }
+})
+
+store.dispatch({
+  type: 'REMOVE_GOAL',
+  id: 0
+})
