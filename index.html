@@ -222,6 +222,10 @@
 
       toggleItem = (todo) => {
         this.props.store.dispatch(toggleTodoAction(todo.id))
+        return API.toggleTodo(todo.id)
+          .catch(()=>{
+            this.props.store.dispatch(toggleTodoAction(todo.id))
+          })
       }
 
       render() {
