@@ -102,6 +102,25 @@
       }
     }
 
+    const checker = (store) => (next) => (action) => {
+      if (
+        action.type === ADD_TODO &&
+        action.todo.name.toLowerCase().indexOf('bitcoin') !== -1
+      ) {
+        return alert("Nope. That's a bad idea.")
+      }
+
+      if (
+        action.type === ADD_GOAL &&
+        action.goal.name.toLowerCase().indexOf('bitcoin') !== -1
+      ) {
+        return alert("Nope. That's a bad idea.")
+      }
+
+
+      return next(action)
+    }
+
     //Reducers
     //they take in the state, take in an action, 
     //return new state based off that action
@@ -133,13 +152,13 @@
     const store = Redux.createStore(Redux.combineReducers({
       todos,
       goals,
-    }))
+    }), Redux.applyMiddleware(checker))
 
-    
+
     store.subscribe(() => {
       const {
         goals,
-        todos
+        todos,
       } = store.getState()
 
       document.getElementById('goals').innerHTML = ''
@@ -154,11 +173,11 @@
     function addTodoToDOM(todo) {
       const node = document.createElement('li')
       const text = document.createTextNode(todo.name)
-      
-      const removeBtn = createRemoveButton(()=>{
+
+      const removeBtn = createRemoveButton(() => {
         store.dispatch(removeTodoAction(todo.id))
       })
-      
+
       node.appendChild(text)
       node.appendChild(removeBtn)
       node.style.textDecoration = todo.complete ? 'line-through' : 'none'
@@ -172,8 +191,8 @@
     function addGoalToDOM(goal) {
       const node = document.createElement('li')
       const text = document.createTextNode(goal.name)
-     
-      const removeBtn = createRemoveButton(()=>{
+
+      const removeBtn = createRemoveButton(() => {
         store.dispatch(removeGoalAction(goal.id))
       })
 
