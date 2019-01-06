@@ -97,7 +97,7 @@
       }
     }
 
-    function receiveDataAction(todos,goals){
+    function receiveDataAction(todos, goals) {
       return {
         type: RECEIVE_DATA,
         todos,
@@ -164,10 +164,10 @@
     }
 
     function loading(state = true, action) {
-      switch(action.type) {
-        case RECEIVE_DATA :
+      switch (action.type) {
+        case RECEIVE_DATA:
           return false
-        default :
+        default:
           return state
       }
     }
@@ -213,6 +213,11 @@
 
       removeItem = (todo) => {
         this.props.store.dispatch(removeTodoAction(todo.id))
+        return API.deleteTodo(todo.id)
+          .catch(()=>{
+            this.props.store.dispatch(addTodoAction(todo))
+            alert('an error occured, try again')
+          })
       }
 
       toggleItem = (todo) => {
@@ -229,7 +234,7 @@
               ref={(input)=>this.input = input}
             />
             <button onClick={this.addItem}>Add Todo</button>
-            <List 
+            <List
               items={this.props.todos}
               remove={this.removeItem}
               toggle={this.toggleItem}
@@ -253,6 +258,11 @@
 
       removeItem = (goal) => {
         this.props.store.dispatch(removeGoalAction(goal.id))
+        return API.deleteGoal(goal.id)
+          .then(()=>{
+            store.dispatch(addGoalAction(goal))
+            alert('an error occured, try again')
+          })
       }
       render() {
         return (
@@ -281,7 +291,6 @@
           API.fetchGoals(),
           ]).then(([todos,goals]) => {
             store.dispatch(receiveDataAction(todos, goals))
-            console.log('goals', goals)
           })
         store.subscribe(()=>this.forceUpdate())
       }
