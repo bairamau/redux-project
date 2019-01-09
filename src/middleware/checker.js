@@ -1,3 +1,10 @@
+import {
+  ADD_GOAL,
+} from '../actions/goals'
+import {
+  ADD_TODO,
+} from '../actions/todos'
+
 const checker = (store) => (next) => (action) => {
   if (
     action.type === ADD_TODO &&

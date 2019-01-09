@@ -1,7 +1,7 @@
 import {
   ADD_GOAL,
   REMOVE_GOAL,
-} from '../actions/todos'
+} from '../actions/goals'
 
 import {
   RECEIVE_DATA,
