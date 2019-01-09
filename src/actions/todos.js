@@ -46,3 +46,14 @@ export function handleDeleteTodo(todo) {
       })
   }
 }
+
+export function handleToggleTodo(id) {
+  return (dispatch) => {
+    dispatch(toggleTodo(id))
+    return API.saveTodoToggle(id)
+      .catch(() => {
+        dispatch(toggleTodo(id))
+        alert('an error occured, try again')
+      })
+  }
+}
